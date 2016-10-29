@@ -1,4 +1,20 @@
 <!-- Primary template that will get shown when widget loads -->
+<script type='text/ng-template' id='loading.html'>
+    <div class='loading'>
+        <!-- <div class="pooplet-animation"></div> -->
+        <h2 class='title'>
+            Portalmon<br />Go
+        </h2>
+        <div class='goose'>
+            <img src='https://csclub.uwaterloo.ca/~ztseguin/portalmon-go/goose.svg' />
+            <div class='circle'></div>
+        </div>
+        <div class='play'>
+            <a ng-click='play()'>Play</a>
+        </div>
+    </div>
+</script>
+
 <script type="text/ng-template" id="portalmonGoMain.html"> 
 	<campusmap id="map"
                config="mapConfig"
