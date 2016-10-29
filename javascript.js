@@ -109,11 +109,15 @@ angular.module('portalApp')
                        var $status = $('<p></p>');
                        
                        // Check if we're within range
-                       if ($scope.currentLocation.distanceTo(latlng) < 40) {
-                          $status.text('You are at the Porta Stop');
-                       } else {
+                       //if ($scope.currentLocation.distanceTo(latlng) < 40) {
+                           var pooplets = 1;
+                           $scope.portalHelpers.invokeServerFunction('visit', { stop_id: feature.properties.building_id, pooplets: pooplets });
+                           $scope.updatePooplets(pooplets);
+                           var $animation = $('<div class="pooplet-animation"></div>');
+                           return $animation;
+                       /*} else {
                            $status.text('Sorry, you are not close enough to the Porta Stop');
-                       }
+                       }*/
                        
                        return $status[0];
                    }
