@@ -79,3 +79,24 @@
     margin-left: 10px;
     margin-top: 8px;
 }
+
+@keyframes  poopletAnimation {
+ 	0% { background: url('https://csclub.uwaterloo.ca/~ztseguin/portalmon-go/pooplet-animation/1.png'); }
+    14% { background: url('https://csclub.uwaterloo.ca/~ztseguin/portalmon-go/pooplet-animation/2.png'); }
+    28% { background: url('https://csclub.uwaterloo.ca/~ztseguin/portalmon-go/pooplet-animation/3.png'); }
+    42% { background: url('https://csclub.uwaterloo.ca/~ztseguin/portalmon-go/pooplet-animation/4.png'); }   
+    56% { background: url('https://csclub.uwaterloo.ca/~ztseguin/portalmon-go/pooplet-animation/5.png'); }
+    70% { background: url('https://csclub.uwaterloo.ca/~ztseguin/portalmon-go/pooplet-animation/6.png'); }
+    84% { background: url('https://csclub.uwaterloo.ca/~ztseguin/portalmon-go/pooplet-animation/7.png'); }
+    100% { background: url('https://csclub.uwaterloo.ca/~ztseguin/portalmon-go/pooplet-animation/8.png'); }   
+}
+
+.pooplet-animation {
+    background: url('https://csclub.uwaterloo.ca/~ztseguin/portalmon-go/pooplet-animation/animation.gif');
+ 	width: 150px;
+    height: 150px;
+    /* animation-name: poopletAnimation;
+    animation-duration: 6s; */Í
+    background-size: 150px 150px;
+    animation-timing-function: linear;
+}
