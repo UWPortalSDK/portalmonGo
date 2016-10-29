@@ -23,8 +23,7 @@ angular.module('portalApp')
                 center: [43.46898830444233,-80.54055154323578],
                 zoom: 16,
                 minZoom: 11,
-                maxBounds: [[43.25,-81.0467],[43.71,-80.1528]],
-                zoomControl: false
+                maxBounds: [[43.25,-81.0467],[43.71,-80.1528]]
             },
 
             scalebar: {
