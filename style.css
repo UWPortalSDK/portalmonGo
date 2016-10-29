@@ -96,7 +96,7 @@
  	width: 150px;
     height: 150px;
     /* animation-name: poopletAnimation;
-    animation-duration: 6s; */Í
+    animation-duration: 6s; */
     background-size: 150px 150px;
-    animation-timing-function: linear;
+    /* animation-timing-function: linear; */
 }
