@@ -90,7 +90,7 @@ angular.module('portalApp')
                 type: 'ubuildings',
                 id: 'buildings',
                 name: 'Buildings',
-                endpoint: 'v2/buildings/list',
+                endpoint: 'v2/dev/null',
                 endpoint_options: { source: 'osm' },
                 indoor_maps_endpoint: 'indoor-maps/buildings'
             },
@@ -99,6 +99,7 @@ angular.module('portalApp')
                 id: 'stops',
                 name: 'Porta Stops',
                 endpoint: 'v2/buildings/list',
+                icon_class: 'icon-pooplet',
                 autoload: true,
                 options: {
                    featureName: function(config, feature) {
@@ -108,11 +109,15 @@ angular.module('portalApp')
                        var $status = $('<p></p>');
                        
                        // Check if we're within range
-                       if ($scope.currentLocation.distanceTo(latlng) < 40) {
-                          $status.text('You are at the Porta Stop');
-                       } else {
+                       //if ($scope.currentLocation.distanceTo(latlng) < 40) {
+                           var pooplets = 1;
+                           $scope.portalHelpers.invokeServerFunction('visit', { stop_id: feature.properties.building_id, pooplets: pooplets });
+                           $scope.updatePooplets(pooplets);
+                           var $animation = $('<div class="pooplet-animation"></div>');
+                           return $animation;
+                       /*} else {
                            $status.text('Sorry, you are not close enough to the Porta Stop');
-                       }
+                       }*/
                        
                        return $status[0];
                    }
@@ -259,11 +264,28 @@ angular.module('portalApp')
             maxZoom: 18
 		});
         
+        new_value.map.on('locationerror', function (event) {
+            
+        });
+        
         new_value.map.on('locationfound', function(event) {
 		   $scope.currentLocation = event.latlng;
         });
     });
     
+    // Get current pooplets count
+    $scope.updatePooplets = function(count) {
+        if (!count) { count = 0; }
+        $scope.portalHelpers.invokeServerFunction('updatePooplets', { pooplets: count}).then(function(res) {
+           $scope.pooplets = res; 
+        });
+    };
+    $scope.updatePooplets();
+    
+    $scope.play = function() {
+        $scope.portalHelpers.showView('portalmonGoMain.html', 1);
+    };
+    
     // Show main view in the first column as soon as controller loads
-	$scope.portalHelpers.showView('portalmonGoMain.html', 1);
+	$scope.portalHelpers.showView('loading.html', 1);
 }]);
