@@ -1,24 +1,8 @@
 <!-- Primary template that will get shown when widget loads -->
 <script type="text/ng-template" id="portalmonGoMain.html"> 
-	<widget-row ng-repeat="item in items" clickable ng-click="showDetails(item)">
-		<widget-cell fill>
-			<span class="itemName">{{item.title}}</span>
-			<span ng-repeat= "tag in item.tags" class="label label-success">
-				{{tag}}
-			</span>
-		</widget-cell>
-		<widget-cell>
-			<widget-icon name="angle-right"></widget-icon>
-		</widget-cell>
-	</widget-row>
-</script>
-
-<!-- This template gets shown when user clicks one of the items in the list -->
-<script type="text/ng-template" id="portalmonGoDetails.html"> 
-	<!-- 'wr' and 'wc' are short for 'widget-row' and 'widget-cell' -->
-	<wr>
-		<wc><h2>{{detailsItem.title}}</h2></wc>
-	</wr>
-	<wr><wc><span ng-repeat= "tag in detailsItem.tags" class="label label-success">{{tag}}</span></wc></wr>
-	<wr><wc><div class="pDetails">{{detailsItem.details}}</div></wc></wr>
+	<campusmap id="map"
+               mapConfig="mapConfig"
+               style="border: 1px solid black; width: 100%; height: 150px;"
+               map="campusMap"
+    />
 </script>
