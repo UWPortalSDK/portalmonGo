@@ -106,19 +106,10 @@ angular.module('portalApp')
                        return feature.properties.building_name;
                    },
                    popupContent: function(config, feature, latlng) {
-                       var $status = $('<p></p>');
-                       
-                       // Check if we're within range
-                       //if ($scope.currentLocation.distanceTo(latlng) < 40) {
-                           var pooplets = 1;
-                           $scope.portalHelpers.invokeServerFunction('visit', { stop_id: feature.properties.building_id, pooplets: pooplets });
-                           $scope.updatePooplets(pooplets);
-                           var $animation = $('<div class="pooplet-animation"></div>');
-                           return $animation;
-                       /*} else {
-                           $status.text('Sorry, you are not close enough to the Porta Stop');
-                       }*/
-                       
+                       var $status = $('<a class="p-button">Get my Pooplets</a>');
+                       $status.click(function(e) {
+                          $scope.getPoop(feature.properties.building_id, $status); 
+                       });
                        return $status[0];
                    }
                 }
@@ -284,6 +275,19 @@ angular.module('portalApp')
     
     $scope.play = function() {
         $scope.portalHelpers.showView('portalmonGoMain.html', 1);
+    };
+    
+    $scope.getPoop = function(building_id, $status){
+     	   // Check if we're within range
+           //if ($scope.currentLocation.distanceTo(latlng) < 40) {
+               var pooplets = 1;
+               $scope.portalHelpers.invokeServerFunction('visit', { stop_id: building_id, pooplets: pooplets });
+               $scope.updatePooplets(pooplets);
+        
+        $status.replaceWith($("<div class='pooplet-animation'></div>"));
+           /*} else {
+               $status.text('Sorry, you are not close enough to the Porta Stop');
+           }*/
     };
     
     // Show main view in the first column as soon as controller loads
