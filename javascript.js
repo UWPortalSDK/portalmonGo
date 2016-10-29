@@ -88,9 +88,9 @@ angular.module('portalApp')
 
             buildings: {
                 type: 'ubuildings',
-                id: 'stops',
-                name: 'Porta Stops',
-                endpoint: 'v2/dev/null',
+                id: 'buildings',
+                name: 'Buildings',
+                endpoint: 'v2/buildings/list',
                 endpoint_options: { source: 'osm' },
                 indoor_maps_endpoint: 'indoor-maps/buildings'
             },
@@ -99,9 +99,24 @@ angular.module('portalApp')
                 id: 'stops',
                 name: 'Porta Stops',
                 endpoint: 'v2/buildings/list',
-                endpoint_options: { source: 'osm' },
-                indoor_maps_endpoint: 'indoor-maps/buildings',
-                autoload: true
+                autoload: true,
+                options: {
+                   featureName: function(config, feature) {
+                       return feature.properties.building_name;
+                   },
+                   popupContent: function(config, feature, latlng) {
+                       var $status = $('<p></p>');
+                       
+                       // Check if we're within range
+                       if ($scope.currentLocation.distanceTo(latlng) < 40) {
+                          $status.text('You are at the Porta Stop');
+                       } else {
+                           $status.text('Sorry, you are not close enough to the Porta Stop');
+                       }
+                       
+                       return $status[0];
+                   }
+                }
             }]
         },
 
@@ -229,6 +244,12 @@ angular.module('portalApp')
 		console.debug(new_value, old_value);
         if (!new_value) return;
         
+        // Disable map panning
+        new_value.map.dragging.disable();
+        new_value.map.touchZoom.disable();
+        new_value.map.doubleClickZoom.disable();
+        new_value.map.scrollWheelZoom.disable();
+        
         // Start watching for the user's location
         new_value.map.locate({
             setView: true,
@@ -238,11 +259,9 @@ angular.module('portalApp')
             maxZoom: 18
 		});
         
-        // Disable map panning
-        new_value.map.dragging.disable();
-        new_value.map.touchZoom.disable();
-        new_value.map.doubleClickZoom.disable();
-        new_value.map.scrollWheelZoom.disable();
+        new_value.map.on('locationfound', function(event) {
+		   $scope.currentLocation = event.latlng;
+        });
     });
     
     // Show main view in the first column as soon as controller loads
