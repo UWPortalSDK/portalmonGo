@@ -23,7 +23,7 @@ angular.module('portalApp')
                 center: [43.46898830444233,-80.54055154323578],
                 zoom: 16,
                 minZoom: 11,
-                maxBounds: [[43.25,-81.0467],[43.71,-80.1528]],
+                maxBounds: [[43.25,-81.0467],[43.71,-80.1528]]
             },
 
             scalebar: {
@@ -87,14 +87,22 @@ angular.module('portalApp')
             default_tiles: 'D',
 
             buildings: {
-                type: 'uwbuilding',
-                id: 'buildings',
-                name: 'Buildings',
-                endpoint: 'v2/buildings/list',
+                type: 'ubuildings',
+                id: 'stops',
+                name: 'Porta Stops',
+                endpoint: 'v2/dev/null',
                 endpoint_options: { source: 'osm' },
                 indoor_maps_endpoint: 'indoor-maps/buildings'
             },
-            layers: []
+            layers: [{
+                type: 'uwapi',
+                id: 'stops',
+                name: 'Porta Stops',
+                endpoint: 'v2/buildings/list',
+                endpoint_options: { source: 'osm' },
+                indoor_maps_endpoint: 'indoor-maps/buildings',
+                autoload: true
+            }]
         },
 
         geocoder: {
@@ -114,7 +122,7 @@ angular.module('portalApp')
             collapsible: true,
             show: false,
             containerClassName: 'routing',
-            collapseBtn: function() {
+            collapseBtn: function(itinerary) {
                 let collapseBtn = L.DomUtil.create('a', 'leaflet-routing-collapse-btn');
                 let showIcon = L.DomUtil.create('i', 'icon-direction ri-show', collapseBtn);
                 let hideIcon = L.DomUtil.create('i', 'icon-cancel ri-hide', collapseBtn);
@@ -220,6 +228,21 @@ angular.module('portalApp')
     $scope.$watch('campusMap.value', function(new_value, old_value) {
 		console.debug(new_value, old_value);
         if (!new_value) return;
+        
+        // Start watching for the user's location
+        new_value.map.locate({
+            setView: true,
+			watch: true,
+			timeout: 10000,
+			enableHighAccuracy: true,
+            maxZoom: 18
+		});
+        
+        // Disable map panning
+        new_value.map.dragging.disable();
+        new_value.map.touchZoom.disable();
+        new_value.map.doubleClickZoom.disable();
+        new_value.map.scrollWheelZoom.disable();
     });
     
     // Show main view in the first column as soon as controller loads
