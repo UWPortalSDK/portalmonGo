@@ -87,14 +87,22 @@ angular.module('portalApp')
             default_tiles: 'D',
 
             buildings: {
-                type: 'uwbuildings',
+                type: 'ubuildings',
                 id: 'stops',
                 name: 'Porta Stops',
-                endpoint: 'v2/poi/inclusivewashrooms',
+                endpoint: 'v2/dev/null',
                 endpoint_options: { source: 'osm' },
                 indoor_maps_endpoint: 'indoor-maps/buildings'
             },
-            layers: []
+            layers: [{
+                type: 'uwapi',
+                id: 'stops',
+                name: 'Porta Stops',
+                endpoint: 'v2/buildings/list',
+                endpoint_options: { source: 'osm' },
+                indoor_maps_endpoint: 'indoor-maps/buildings',
+                autoload: true
+            }]
         },
 
         geocoder: {
