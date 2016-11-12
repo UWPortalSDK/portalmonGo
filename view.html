@@ -42,16 +42,15 @@
 <!-- Portastop -->
 <script type='text/ng-template' id='portastop.html'>
     <div class='pg-popup pg-light-background'>
-        <h2 class='title'>Portastop</h2>
-               
+        <p>Welcome to the <b>{{ active_stop.name }}</b> portastop!</p>
+        
         <div class='block-center'>
             <div class='goose' ng-repeat="i in range(active_stop.collected_geese) track by $index">
                 <img src='https://csclub.uwaterloo.ca/~ztseguin/portalmon-go/goose.svg' />
                 <div class='circle'></div>
             </div>
         </div>
-               
-        <p>Welcome to the <b>{{ active_stop.name }}</b> portastop!</p>
+        
         <p>You have collected {{ active_stop.collected_geese }} {{ active_stop.collected_geese == 1 ? 'goose' : 'geese' }}.</p>
     </div>
 </script>
