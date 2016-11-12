@@ -1,6 +1,6 @@
 <!-- Primary template that will get shown when widget loads -->
 <script type='text/ng-template' id='loading.html'>
-    <div class='loading'>
+    <div class='pg-splash pg-light-background'>
         <!-- <div class="pooplet-animation"></div> -->
         <h2 class='title'>
             Portalmon<br />Go
@@ -23,5 +23,45 @@
                map="campusMap"
     />
     
-    Pooplets: {{ pooplets }}
+    <div class='block-left'>
+        <div class='goose'>
+            <p>
+                <span class='large-value'>{{ profile.collected.geese }}</span>
+                <span class='detail'>{{ profile.collected.geese == 1 ? 'goose' : 'geese' }}</span>
+            </p>
+            <div class='circle'></div>
+        </div>
+        
+        <div class='profile'>
+            <p class='name'>{{ profile.username }}</p>
+            <p class='faculty'>{{ profile.faculty || 'Faculty Unknown' }}</p>
+        </div>
+    </div>
+</script>
+
+<!-- Portastop -->
+<script type='text/ng-template' id='portastop.html'>
+    <div class='pg-popup pg-light-background'>
+        <h2 class='title'>Portastop</h2>
+               
+        <div class='block-center'>
+            <div class='goose' ng-repeat="i in range(active_stop.collected_geese) track by $index">
+                <img src='https://csclub.uwaterloo.ca/~ztseguin/portalmon-go/goose.svg' />
+                <div class='circle'></div>
+            </div>
+        </div>
+               
+        <p>Welcome to the <b>{{ active_stop.name }}</b> portastop!</p>
+        <p>You have collected {{ active_stop.collected_geese }} {{ active_stop.collected_geese == 1 ? 'goose' : 'geese' }}.</p>
+    </div>
+</script>
+
+<!-- Campus Map Settings -->
+<script type='text/ng-template' id='campusMapSettings.html'>
+    <h1>Developed By</h1>
+    
+    <ul>
+        <li>Zachary Seguin</li>
+        <li>Kitty</li>
+    </ul>
 </script>
