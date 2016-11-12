@@ -20,3 +20,21 @@ function getPooplets() {
     
     return res[0].Column1;
 }
+
+
+function getProfile() {
+    var profile = {
+        username: user.Username,
+		career: user.Student.Career,
+		faculty: user.Student.Faculty,
+		departments: user.Student.Departments,
+		plans: user.Student.PlanTitles,
+		form_of_study: user.Student.FormOfStudy,
+		level: user.Student.Level,
+        collected: {
+         	geese: getPooplets()   
+        }
+	};
+    
+    return profile;
+}

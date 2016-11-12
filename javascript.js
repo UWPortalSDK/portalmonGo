@@ -4,6 +4,85 @@ var imports = [
 
 angular.module('portalApp')
 .controller('portalmonGoCtrl', ['$scope', function ($scope) {
+    $scope.campusMap = { value: null };
+    
+    // Load user profect
+    $scope.portalHelpers.invokeServerFunction('getProfile').then(function(profile) {
+        console.debug(profile);
+        $scope.profile = profile; 
+    });
+    
+    $scope.$watch('campusMap.value', function(new_value, old_value) {
+		console.debug(new_value, old_value);
+        if (!new_value) return;
+        
+        // Disable map panning
+        new_value.map.dragging.disable();
+        new_value.map.touchZoom.disable();
+        new_value.map.doubleClickZoom.disable();
+        new_value.map.scrollWheelZoom.disable();
+        
+        // Start watching for the user's location
+        new_value.map.locate({
+            setView: true,
+			watch: true,
+			timeout: 10000,
+			enableHighAccuracy: true,
+            maxZoom: 18
+		});
+        
+        new_value.map.on('locationerror', function (event) {
+            
+        });
+        
+        new_value.map.on('locationfound', function(event) {
+		   $scope.currentLocation = event.latlng;
+        });
+    });
+    
+    $scope.range = function(n) {
+      return new Array(n);  
+    };
+    
+    // Get current pooplets count
+    $scope.updatePooplets = function(count) {
+        if (!count) { count = 0; }
+        $scope.portalHelpers.invokeServerFunction('updatePooplets', { pooplets: count}).then(function(res) {
+           $scope.profile.collected.geese = res; 
+        });
+    };
+    
+    $scope.play = function() {
+        $scope.portalHelpers.showView('portalmonGoMain.html', 1);
+    };
+    
+    $scope.getPoop = function(stop_id, feature, $status){
+        // Check if we're within range
+        //if ($scope.currentLocation.distanceTo(latlng) < 40) {
+        var pooplets = Math.floor(((Math.random() * 100) % 4) + 1);
+        $scope.portalHelpers.invokeServerFunction('visit', { stop_id: stop_id, pooplets: pooplets });
+        $scope.updatePooplets(pooplets);
+
+        $status.replaceWith($("<p>You have already visited this Portastop.</p>"));
+        /*} else {
+               $status.text('Sorry, you are not close enough to the Porta Stop');
+        }*/
+        
+        $scope.active_stop = {
+        	id: stop_id,
+            name: feature.properties.name || feature.properties.building_name,
+            collected_geese: pooplets
+        };
+        $scope.portalHelpers.showView('portastop.html', 2);
+    };
+    
+    // Show main view in the first column as soon as controller loads
+	// TODO: Re-enable splash screen
+	$scope.portalHelpers.showView('loading.html', 1);
+	//$scope.portalHelpers.showView('portalmonGoMain.html', 1);
+    
+    
+    // MAP CONFIGURATIN
     $scope.mapConfig = {
         debug: false,
 
@@ -23,7 +102,8 @@ angular.module('portalApp')
                 center: [43.46898830444233,-80.54055154323578],
                 zoom: 16,
                 minZoom: 11,
-                maxBounds: [[43.25,-81.0467],[43.71,-80.1528]]
+                maxBounds: [[43.25,-81.0467],[43.71,-80.1528]],
+                zoomControl: false
             },
 
             scalebar: {
@@ -99,19 +179,22 @@ angular.module('portalApp')
                 id: 'stops',
                 name: 'Porta Stops',
                 endpoint: 'v2/buildings/list',
-                icon_class: 'icon-pooplet',
+                icon_class: 'icon-star-circled',
                 autoload: true,
                 options: {
-                   featureName: function(config, feature) {
-                       return feature.properties.building_name;
-                   },
-                   popupContent: function(config, feature, latlng) {
-                       var $status = $('<a class="p-button">Get my Pooplets</a>');
-                       $status.click(function(e) {
-                          $scope.getPoop(feature.properties.building_id, $status); 
-                       });
-                       return $status[0];
-                   }
+                    featureName: function(config, feature) {
+                        return feature.properties.building_name;
+                    },
+                    popupContent: function(config, feature, latlng) {
+                        var $status = $('<div class="play"><a>Visit</a></div>');
+                        $status.click(function(e) {
+                            $scope.getPoop(feature.properties.building_id, feature, $status); 
+                        });
+                        return $status[0];
+                    },
+                    filter: function(feature, layer) {
+                        return feature.properties.building_parent == null;
+                    }
                 }
             }]
         },
@@ -126,11 +209,11 @@ angular.module('portalApp')
             autoRoute: true,
             lineOptions: {
                 styles: [{color: 'white', opacity: 1, weight: 8},
-                            {color: 'black', opacity: 1, weight: 6},
-                            {color: '#00b6ff', opacity: 1, weight: 4}]
+                         {color: 'black', opacity: 1, weight: 6},
+                         {color: '#00b6ff', opacity: 1, weight: 4}]
             },
             summaryTemplate: '<h4>Directions</h4><p class="route-summary">{distance}, {time}</p>',
-            collapsible: true,
+            collapsible: false,
             show: false,
             containerClassName: 'routing',
             collapseBtn: function(itinerary) {
@@ -234,62 +317,4 @@ angular.module('portalApp')
             }
         ]
     };
-    $scope.campusMap = { value: null };
-    
-    $scope.$watch('campusMap.value', function(new_value, old_value) {
-		console.debug(new_value, old_value);
-        if (!new_value) return;
-        
-        // Disable map panning
-        new_value.map.dragging.disable();
-        new_value.map.touchZoom.disable();
-        new_value.map.doubleClickZoom.disable();
-        new_value.map.scrollWheelZoom.disable();
-        
-        // Start watching for the user's location
-        new_value.map.locate({
-            setView: true,
-			watch: true,
-			timeout: 10000,
-			enableHighAccuracy: true,
-            maxZoom: 18
-		});
-        
-        new_value.map.on('locationerror', function (event) {
-            
-        });
-        
-        new_value.map.on('locationfound', function(event) {
-		   $scope.currentLocation = event.latlng;
-        });
-    });
-    
-    // Get current pooplets count
-    $scope.updatePooplets = function(count) {
-        if (!count) { count = 0; }
-        $scope.portalHelpers.invokeServerFunction('updatePooplets', { pooplets: count}).then(function(res) {
-           $scope.pooplets = res; 
-        });
-    };
-    $scope.updatePooplets();
-    
-    $scope.play = function() {
-        $scope.portalHelpers.showView('portalmonGoMain.html', 1);
-    };
-    
-    $scope.getPoop = function(building_id, $status){
-     	   // Check if we're within range
-           //if ($scope.currentLocation.distanceTo(latlng) < 40) {
-               var pooplets = 1;
-               $scope.portalHelpers.invokeServerFunction('visit', { stop_id: building_id, pooplets: pooplets });
-               $scope.updatePooplets(pooplets);
-        
-        $status.replaceWith($("<div class='pooplet-animation'></div>"));
-           /*} else {
-               $status.text('Sorry, you are not close enough to the Porta Stop');
-           }*/
-    };
-    
-    // Show main view in the first column as soon as controller loads
-	$scope.portalHelpers.showView('loading.html', 1);
 }]);
