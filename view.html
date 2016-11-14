@@ -42,7 +42,7 @@
 <!-- Portastop -->
 <script type='text/ng-template' id='portastop.html'>
     <div class='pg-popup pg-light-background'>
-        <p>Welcome to the <b>{{ active_stop.name }}</b> portastop!</p>
+        <p>Welcome to the <b>{{ active_stop.name }}</b> Portastop!</p>
         
         <div class='block-center'>
             <div class='goose' ng-repeat="i in range(active_stop.collected_geese) track by $index">
@@ -51,7 +51,11 @@
             </div>
         </div>
         
-        <p>You have collected {{ active_stop.collected_geese }} {{ active_stop.collected_geese == 1 ? 'goose' : 'geese' }}.</p>
+        <p>You have collected <ng-pluralize count="active_stop.collected_geese"
+                                            when="{
+            										'one': '1 goose',
+            										'other': '{} geese'
+            									  }" />.</p>
     </div>
 </script>
 
