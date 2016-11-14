@@ -18,7 +18,7 @@ function getPooplets() {
  	var raw = db.Execute('SELECT SUM(pooplets) FROM pooplets WHERE username=@currentUser');
     var res = JSON.parse(raw);
     
-    return res[0].Column1;
+    return res[0].Column1 || 0;
 }
 
 
